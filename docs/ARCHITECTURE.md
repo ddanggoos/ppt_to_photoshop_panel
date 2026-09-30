@@ -27,8 +27,8 @@ src/
 │
 ├── pptx/                     PPTX → 중간 모델
 │   ├── package/              ZIP 읽기, 관계(rels), 파트 경로 처리
-│   ├── xml/                  XML 파서 설정, 헬퍼
-│   ├── parts/                presentation, slide, layout, master, theme 파트 읽기
+│   ├── xml/                  XML 파서(요소 순서 보존), XmlElement 헬퍼
+│   ├── parts/                presentation, slide 파트 읽기, 자리 표시자 위치 상속(layout → master)
 │   ├── elements/             sp(도형), pic(그림), grpSp(그룹), txBody(텍스트) → 중간 모델 요소
 │   ├── styles/               테마 색상, 폰트, 서식 상속 처리
 │   ├── units.ts              EMU ↔ pt (EMU는 OOXML 전용 단위라 여기 둠)
@@ -40,6 +40,7 @@ src/
 │   ├── host/                 executeAsModal, batchPlay 래퍼
 │   ├── descriptors/          batchPlay 명령 객체 생성기
 │   ├── document/             문서 생성
+│   ├── fonts/                설치된 폰트 목록, 기본 폰트 선택
 │   ├── layers/               text, image, shape, group 레이어 생성
 │   ├── render-options.ts
 │   ├── render-presentation.ts  렌더러 전체 흐름
@@ -112,7 +113,12 @@ tests/                        src와 같은 구조 (예: src/pptx/package/part-p
 
 EMU는 `pptx` 밖으로 나가지 않습니다.
 
-### 3.6 테스트
+### 3.6 XML 읽기
+
+- 슬라이드 XML은 **요소 순서가 의미를 가집니다**. 도형 순서는 겹침 순서이고, 텍스트의 `<a:r>`와 `<a:br>` 순서는 줄바꿈 위치예요.
+- 그래서 `pptx/xml/parser.ts`는 순서를 보존하는 `XmlElement` 트리를 반환합니다. XML은 항상 이 트리와 `findChild`, `findPath`, `getAttr` 같은 헬퍼로 읽습니다.
+
+### 3.7 테스트
 
 - `core`와 `pptx`는 기능을 추가할 때 테스트도 함께 작성합니다(vitest, Node에서 실행).
 - 테스트용 PPTX는 `tests/helpers/`의 생성 도구로 코드에서 만듭니다.

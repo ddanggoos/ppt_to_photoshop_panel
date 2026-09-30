@@ -39,6 +39,17 @@ sp-theme {
   font-size: var(--uxp-host-font-size-smaller);
 }
 
+.field-label {
+  color: var(--uxp-host-label-text-color);
+  font-size: var(--uxp-host-font-size-smaller);
+  margin: 6px 0 2px;
+}
+
+select,
+input {
+  width: 100%;
+}
+
 sp-divider {
   margin-bottom: 12px;
 }

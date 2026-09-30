@@ -7,7 +7,7 @@ export interface FileInfoElements {
   slideInfo: HTMLElement;
 }
 
-/** Shows the opened file name and its slide count and size. */
+/** Shows the opened file name, slide count and size, and how many text boxes were found. */
 export function renderFileInfo(els: FileInfoElements, state: PanelState): void {
   const { presentation } = state;
   if (!presentation) {
@@ -18,6 +18,7 @@ export function renderFileInfo(els: FileInfoElements, state: PanelState): void {
 
   const { width, height } = presentation.slideSize;
   const sizePx = `${ptToPx(width, DEFAULT_PPI)}×${ptToPx(height, DEFAULT_PPI)} px`;
+  const textCount = presentation.slides.reduce((sum, slide) => sum + slide.elements.length, 0);
   els.fileName.textContent = `${state.fileBaseName}.pptx`;
-  els.slideInfo.textContent = `슬라이드 ${presentation.slides.length}장 · ${sizePx}`;
+  els.slideInfo.textContent = `슬라이드 ${presentation.slides.length}장 · ${sizePx} · 텍스트 ${textCount}개`;
 }

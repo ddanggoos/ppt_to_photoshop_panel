@@ -7,7 +7,11 @@ describe("parsePptx", () => {
     const presentation = await parsePptx(await buildPptx({ slideCount: 3 }));
     expect(presentation).toEqual({
       slideSize: { width: 960, height: 540 },
-      slides: [{ number: 1 }, { number: 2 }, { number: 3 }],
+      slides: [
+        { number: 1, elements: [] },
+        { number: 2, elements: [] },
+        { number: 3, elements: [] },
+      ],
     });
   });
 

@@ -1,2 +1,4 @@
 export { renderPresentation } from "./render-presentation";
-export { DEFAULT_PPI, type RenderOptions } from "./render-options";
+export { DEFAULT_PPI, DEFAULT_TEXT_SIZE_PT, type RenderOptions, type TextStyle } from "./render-options";
+export { listFonts, type FontInfo } from "./fonts/list-fonts";
+export { defaultFontName } from "./fonts/default-font";

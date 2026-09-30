@@ -11,6 +11,7 @@ PowerPoint(.pptx) 슬라이드를 Photoshop 문서로 변환하는 Photoshop UXP
 - 다른 모듈은 별칭 + `index.ts`로만 접근합니다(`from "@pptx"`). 내부 파일을 직접 import하지 않습니다.
 - 1파일 1책임, 파일당 약 150줄 이내, 파일 이름은 kebab-case.
 - 중간 모델의 단위는 pt입니다. EMU는 `pptx` 밖으로 내보내지 않습니다.
+- XML은 순서를 보존하는 `XmlElement` 트리(`pptx/xml/`)와 그 헬퍼로만 읽습니다.
 - 경로 별칭을 바꿀 때는 `path-aliases.js`와 `tsconfig.json`의 `paths`를 함께 수정합니다.
 
 ## 명령어

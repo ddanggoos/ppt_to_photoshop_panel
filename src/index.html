@@ -21,6 +21,16 @@
       <sp-divider size="s"></sp-divider>
 
       <div class="section">
+        <span class="label">텍스트 (모든 텍스트 레이어에 적용)</span>
+        <label class="field-label" for="font-select">폰트</label>
+        <select id="font-select"></select>
+        <label class="field-label" for="font-size">크기 (pt)</label>
+        <input id="font-size" type="number" min="1" step="1">
+      </div>
+
+      <sp-divider size="s"></sp-divider>
+
+      <div class="section">
         <sp-button id="btn-convert" variant="accent" disabled>Photoshop으로 변환</sp-button>
         <span id="status" class="status"></span>
       </div>

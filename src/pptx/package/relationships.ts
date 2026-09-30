@@ -1,4 +1,4 @@
-import { ATTR } from "../xml/parser";
+import { findChildren, getAttr } from "../xml/xml-element";
 import { dirname, relsPathFor, resolvePartPath } from "./part-path";
 import type { PptxPackage } from "./pptx-package";
 
@@ -7,6 +7,8 @@ const REL_NS = "http://schemas.openxmlformats.org/officeDocument/2006/relationsh
 export const RelType = {
   officeDocument: `${REL_NS}/officeDocument`,
   slide: `${REL_NS}/slide`,
+  slideLayout: `${REL_NS}/slideLayout`,
+  slideMaster: `${REL_NS}/slideMaster`,
 } as const;
 
 export interface Relationship {
@@ -24,12 +26,17 @@ export async function readRelationships(pkg: PptxPackage, partPath: string): Pro
   const relsPath = partPath ? relsPathFor(partPath) : "_rels/.rels";
   if (!pkg.hasPart(relsPath)) return [];
 
-  const doc = await pkg.readXml(relsPath);
+  const root = await pkg.readXml(relsPath);
   const baseDir = dirname(partPath);
-  const nodes: Record<string, string>[] = doc?.Relationships?.Relationship ?? [];
-  return nodes.map((node) => ({
-    id: node[`${ATTR}Id`],
-    type: node[`${ATTR}Type`],
-    target: resolvePartPath(baseDir, node[`${ATTR}Target`]),
+  return findChildren(root, "Relationship").map((rel) => ({
+    id: getAttr(rel, "Id") ?? "",
+    type: getAttr(rel, "Type") ?? "",
+    target: resolvePartPath(baseDir, getAttr(rel, "Target") ?? ""),
   }));
+}
+
+/** Target of the first relationship of the given type, if any. */
+export async function findRelatedPart(pkg: PptxPackage, partPath: string, type: string): Promise<string | undefined> {
+  const rels = await readRelationships(pkg, partPath);
+  return rels.find((rel) => rel.type === type)?.target;
 }

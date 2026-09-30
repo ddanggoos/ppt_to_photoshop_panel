@@ -1,6 +1,7 @@
 import JSZip from "jszip";
 import { PptxError } from "../errors";
-import { parseXml, type XmlNode } from "../xml/parser";
+import { parseXml } from "../xml/parser";
+import type { XmlElement } from "../xml/xml-element";
 
 /** Read access to the parts (files) inside a .pptx ZIP container. */
 export class PptxPackage {
@@ -18,7 +19,8 @@ export class PptxPackage {
     return this.zip.file(path) !== null;
   }
 
-  async readXml(path: string): Promise<XmlNode> {
+  /** Reads a part and returns its root XML element. */
+  async readXml(path: string): Promise<XmlElement> {
     const file = this.zip.file(path);
     if (!file) {
       throw new PptxError(`Missing part: ${path}`);

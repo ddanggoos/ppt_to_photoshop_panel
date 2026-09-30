@@ -1,4 +1,5 @@
 import type { Presentation } from "@core";
+import { DEFAULT_TEXT_SIZE_PT, type TextStyle } from "@photoshop";
 import { createStore, type Store } from "./store";
 
 export type Status =
@@ -10,6 +11,8 @@ export interface PanelState {
   presentation: Presentation | null;
   /** Opened file name without the .pptx extension. */
   fileBaseName: string;
+  /** Font and size applied to every text layer. */
+  textStyle: TextStyle;
   busy: boolean;
   status: Status;
 }
@@ -20,6 +23,7 @@ export function createPanelStore(): PanelStore {
   return createStore<PanelState>({
     presentation: null,
     fileBaseName: "",
+    textStyle: { sizePt: DEFAULT_TEXT_SIZE_PT },
     busy: false,
     status: { kind: "idle" },
   });
