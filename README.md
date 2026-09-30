@@ -2,8 +2,16 @@
 
 PowerPoint(`.pptx`) 슬라이드를 Photoshop 문서로 변환하는 Photoshop **UXP 플러그인 패널**입니다.
 
-> 현재 상태: 기본 뼈대. PPTX를 열면 슬라이드 크기와 개수를 읽고, 슬라이드마다 같은 크기의 빈 Photoshop 문서를 만듭니다.
-> 텍스트, 이미지, 도형을 레이어로 옮기는 기능은 다음 단계에서 구현합니다.
+> 현재 상태: PPTX의 **텍스트 상자를 Photoshop 텍스트 레이어로** 옮깁니다.
+
+### 변환 방식
+
+- 슬라이드마다 같은 크기의 Photoshop 문서를 하나씩 만듭니다(기본 144ppi, 16:9 → 1920×1080).
+- 텍스트 상자 하나가 **포인트 텍스트 레이어** 하나가 됩니다. 레이어 이름은 PPT 텍스트 상자 이름을 쓰고, 순서는 PPT에서 겹쳐진 순서를 따릅니다.
+- **옮기는 것**: 텍스트 내용, 줄바꿈(Enter, Shift+Enter), 위치(그룹 안 텍스트와 레이아웃에서 위치를 물려받는 자리 표시자 포함)
+- **옮기지 않는 것**: PPT의 폰트, 크기, 색상. 모든 텍스트 레이어에 패널에서 고른 폰트와 크기를 적용하고, 색은 검정입니다.
+- 자동 줄바꿈으로 넘어간 줄은 PPTX에 저장되지 않아서 한 줄로 이어집니다.
+- 이미지, 도형, 표는 아직 옮기지 않습니다.
 
 ## 기술 스택
 
@@ -35,7 +43,11 @@ npm install
 npm run build      # 프로덕션 빌드 → dist/
 npm run watch      # 개발용: 파일이 바뀔 때마다 자동으로 다시 빌드
 npm run typecheck  # 타입 검사
+npm test           # 테스트 (vitest)
 ```
+
+PR과 `main` 푸시마다 GitHub Actions(`.github/workflows/ci.yml`)가 타입 검사, 테스트, 빌드를 실행합니다.
+빌드된 플러그인은 Actions 실행 결과의 `plugin-dist` 아티팩트로 내려받을 수 있습니다(14일 보관).
 
 ## Photoshop에 로드하기 (UDT)
 
@@ -48,29 +60,16 @@ npm run typecheck  # 타입 검사
 
 디버깅은 **••• → Debug**를 누르면 열리는 DevTools에서 합니다(콘솔, 브레이크포인트).
 
-## 폴더 구조
+## 구조
 
 ```
-├── manifest.json            플러그인 정보 (ID, 권한, 패널, 지원 PS 버전)
-├── webpack.config.js        빌드 설정 (SWC 별칭, 호스트 모듈 externals)
-├── tsconfig.json
-└── src/
-    ├── index.html           패널 마크업
-    ├── index.ts             진입점 (SWC 컴포넌트 등록, 패널 초기화)
-    ├── styles.css           Photoshop 테마 변수(--uxp-host-*) 기반 스타일
-    ├── ui/panel.ts          패널 동작 (파일 선택, 변환 버튼, 상태 표시)
-    ├── pptx/                PPTX 읽기
-    │   ├── reader.ts        ZIP 해제 → presentation.xml → 슬라이드 크기와 순서
-    │   ├── types.ts
-    │   └── units.ts         EMU ↔ px/pt 변환 (기본 144ppi: 16:9 → 1920×1080)
-    ├── photoshop/           Photoshop 문서 생성
-    │   ├── converter.ts     executeAsModal 안에서 슬라이드별 문서 생성
-    │   └── document.ts
-    └── types/               타입 정의 보강
+.pptx → [pptx 파서] → 중간 모델(core) → [photoshop 렌더러] → Photoshop 문서
 ```
+
+디렉토리 구조, 의존 방향, 파일 규칙은 [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)에 정리되어 있습니다.
 
 ## 참고 사항
 
 - `src/types/uxp-augment.d.ts`: `@adobe/cc-ext-uxp-types`에 `storage.localFileSystem` 선언이 빠져 있어서 보강했습니다.
-- `converter.ts`의 `reportProgress` 헬퍼: `@types/photoshop`에 `reportProgress`가 함수가 아닌 `void`로 잘못 선언되어 있어서 감쌌습니다.
+- `src/photoshop/host/modal.ts`의 `reportProgress` 처리: `@types/photoshop`에 `reportProgress`가 함수가 아닌 `void`로 잘못 선언되어 있어서 감쌌습니다.
 - 파일 접근 권한은 `localFileSystem: "request"`입니다. 사용자가 파일 선택창에서 고른 파일만 읽을 수 있습니다.
