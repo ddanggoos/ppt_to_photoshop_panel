@@ -38,6 +38,9 @@ npm run typecheck  # 타입 검사
 npm test           # 테스트 (vitest)
 ```
 
+PR과 `main` 푸시마다 GitHub Actions(`.github/workflows/ci.yml`)가 타입 검사, 테스트, 빌드를 실행합니다.
+빌드된 플러그인은 Actions 실행 결과의 `plugin-dist` 아티팩트로 내려받을 수 있습니다(14일 보관).
+
 ## Photoshop에 로드하기 (UDT)
 
 1. Photoshop을 실행하고, UDT의 **Connected apps**에 Photoshop이 표시되는지 확인합니다.
