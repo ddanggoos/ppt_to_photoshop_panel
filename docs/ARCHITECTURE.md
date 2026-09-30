@@ -124,3 +124,4 @@ EMU는 `pptx` 밖으로 나가지 않습니다.
 - 테스트용 PPTX는 `tests/helpers/`의 생성 도구로 코드에서 만듭니다.
 - 공개 API는 별칭으로 테스트하고(`from "@pptx"`), 내부 파일은 상대 경로로 import해서 테스트합니다(`from "../../../src/pptx/package/part-path"`). 3.2의 모듈 경계 규칙은 `src/` 안에서만 적용됩니다.
 - `photoshop`, `platform`, `ui`는 Photoshop 안에서만 동작하므로 UXP Developer Tool로 직접 확인합니다.
+  - 예외: Photoshop이나 UXP를 import하지 않는 순수 함수(예: `ui/state/selection.ts`)는 Node에서 테스트합니다.

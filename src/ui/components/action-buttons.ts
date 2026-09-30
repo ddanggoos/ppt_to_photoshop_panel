@@ -3,11 +3,10 @@ import type { PanelState } from "../state/panel-state";
 
 export interface ActionButtonElements {
   openButton: HTMLElement;
-  convertButton: HTMLElement;
+  generateButton: HTMLElement;
 }
 
 export function renderActionButtons(els: ActionButtonElements, state: PanelState): void {
-  const hasSlides = (state.presentation?.slides.length ?? 0) > 0;
   setDisabled(els.openButton, state.busy);
-  setDisabled(els.convertButton, state.busy || !hasSlides);
+  setDisabled(els.generateButton, state.busy || state.selectedSlideNumbers.length === 0);
 }

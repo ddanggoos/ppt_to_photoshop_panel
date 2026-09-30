@@ -11,6 +11,7 @@ export async function openPresentation(store: PanelStore): Promise<void> {
   store.update({
     presentation,
     fileBaseName: file.name.replace(/\.pptx$/i, ""),
+    selectedSlideNumbers: [],
     status: { kind: "idle" },
   });
 }

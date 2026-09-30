@@ -1,63 +1,141 @@
-/* Host theme variables: https://developer.adobe.com/photoshop/uxp/2022/guides/theme-awareness/ */
+/*
+ * Host theme variables: https://developer.adobe.com/photoshop/uxp/2022/guides/theme-awareness/
+ * Fallbacks (dark theme) apply only outside Photoshop, e.g. when previewing in a browser.
+ */
+html,
 body {
+  height: 100%;
   margin: 0;
-  background-color: var(--uxp-host-background-color);
-  color: var(--uxp-host-text-color);
-  font-size: var(--uxp-host-font-size);
+}
+
+body {
+  background-color: var(--uxp-host-background-color, #323232);
+  color: var(--uxp-host-text-color, #e0e0e0);
+  font-size: var(--uxp-host-font-size, 12px);
 }
 
 sp-theme {
   display: block;
+  height: 100%;
   background-color: transparent;
 }
 
+/* Header / list / footer; only the list scrolls. */
 .panel {
   display: flex;
   flex-direction: column;
-  padding: 12px;
+  height: 100%;
+  padding: 8px 12px;
+  box-sizing: border-box;
 }
 
-.section {
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--uxp-host-border-color, #4a4a4a);
+}
+
+.file-info {
   display: flex;
   flex-direction: column;
-  margin-bottom: 12px;
-}
-
-.label {
-  color: var(--uxp-host-label-text-color);
-  font-size: var(--uxp-host-font-size-smaller);
-  margin-bottom: 4px;
+  flex: 1;
+  min-width: 0;
+  margin-right: 8px;
 }
 
 .file-name {
   font-weight: bold;
-  margin-bottom: 2px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .secondary {
-  color: var(--uxp-host-text-color-secondary);
-  font-size: var(--uxp-host-font-size-smaller);
+  color: var(--uxp-host-text-color-secondary, #a0a0a0);
+  font-size: var(--uxp-host-font-size-smaller, 11px);
 }
 
-.field-label {
-  color: var(--uxp-host-label-text-color);
-  font-size: var(--uxp-host-font-size-smaller);
-  margin: 6px 0 2px;
+.list-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 0;
 }
 
-select,
-input {
-  width: 100%;
+.slide-list {
+  flex: 1;
+  overflow-y: auto;
+  border-top: 1px solid var(--uxp-host-border-color, #4a4a4a);
+  border-bottom: 1px solid var(--uxp-host-border-color, #4a4a4a);
 }
 
-sp-divider {
-  margin-bottom: 12px;
+/* | checkbox | slide number | text preview | */
+.slide-row {
+  display: flex;
+  align-items: flex-start;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--uxp-host-border-color, #4a4a4a);
+}
+
+.slide-number {
+  width: 24px;
+  flex-shrink: 0;
+  padding-top: 6px;
+  text-align: right;
+  margin-right: 8px;
+  color: var(--uxp-host-text-color-secondary, #a0a0a0);
+}
+
+.slide-preview {
+  flex: 1;
+  min-width: 0;
+  padding-top: 6px;
+}
+
+.slide-preview.empty {
+  color: var(--uxp-host-text-color-secondary, #a0a0a0);
+}
+
+.preview-line {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.panel-footer {
+  padding-top: 8px;
+}
+
+.text-style {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.text-style select {
+  flex: 1;
+  min-width: 0;
+  margin-right: 6px;
+}
+
+.text-style input {
+  width: 56px;
+  margin-right: 4px;
+}
+
+.footer-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
 }
 
 .status {
-  margin-top: 8px;
-  font-size: var(--uxp-host-font-size-smaller);
-  color: var(--uxp-host-text-color-secondary);
+  flex: 1;
+  margin-right: 8px;
+  font-size: var(--uxp-host-font-size-smaller, 11px);
+  color: var(--uxp-host-text-color-secondary, #a0a0a0);
 }
 
 .status.error {
