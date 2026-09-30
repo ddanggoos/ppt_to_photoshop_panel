@@ -35,6 +35,7 @@ npm install
 npm run build      # 프로덕션 빌드 → dist/
 npm run watch      # 개발용: 파일이 바뀔 때마다 자동으로 다시 빌드
 npm run typecheck  # 타입 검사
+npm test           # 테스트 (vitest)
 ```
 
 ## Photoshop에 로드하기 (UDT)
@@ -48,29 +49,16 @@ npm run typecheck  # 타입 검사
 
 디버깅은 **••• → Debug**를 누르면 열리는 DevTools에서 합니다(콘솔, 브레이크포인트).
 
-## 폴더 구조
+## 구조
 
 ```
-├── manifest.json            플러그인 정보 (ID, 권한, 패널, 지원 PS 버전)
-├── webpack.config.js        빌드 설정 (SWC 별칭, 호스트 모듈 externals)
-├── tsconfig.json
-└── src/
-    ├── index.html           패널 마크업
-    ├── index.ts             진입점 (SWC 컴포넌트 등록, 패널 초기화)
-    ├── styles.css           Photoshop 테마 변수(--uxp-host-*) 기반 스타일
-    ├── ui/panel.ts          패널 동작 (파일 선택, 변환 버튼, 상태 표시)
-    ├── pptx/                PPTX 읽기
-    │   ├── reader.ts        ZIP 해제 → presentation.xml → 슬라이드 크기와 순서
-    │   ├── types.ts
-    │   └── units.ts         EMU ↔ px/pt 변환 (기본 144ppi: 16:9 → 1920×1080)
-    ├── photoshop/           Photoshop 문서 생성
-    │   ├── converter.ts     executeAsModal 안에서 슬라이드별 문서 생성
-    │   └── document.ts
-    └── types/               타입 정의 보강
+.pptx → [pptx 파서] → 중간 모델(core) → [photoshop 렌더러] → Photoshop 문서
 ```
+
+디렉토리 구조, 의존 방향, 파일 규칙은 [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)에 정리되어 있습니다.
 
 ## 참고 사항
 
 - `src/types/uxp-augment.d.ts`: `@adobe/cc-ext-uxp-types`에 `storage.localFileSystem` 선언이 빠져 있어서 보강했습니다.
-- `converter.ts`의 `reportProgress` 헬퍼: `@types/photoshop`에 `reportProgress`가 함수가 아닌 `void`로 잘못 선언되어 있어서 감쌌습니다.
+- `src/photoshop/host/modal.ts`의 `reportProgress` 처리: `@types/photoshop`에 `reportProgress`가 함수가 아닌 `void`로 잘못 선언되어 있어서 감쌌습니다.
 - 파일 접근 권한은 `localFileSystem: "request"`입니다. 사용자가 파일 선택창에서 고른 파일만 읽을 수 있습니다.

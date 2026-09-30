@@ -12,8 +12,14 @@
     "skipLibCheck": true,
     "isolatedModules": true,
     "sourceMap": true,
-    "rootDir": "src",
-    "outDir": "dist"
+    "paths": {
+      "@core": ["./src/core"],
+      "@pptx": ["./src/pptx"],
+      "@photoshop": ["./src/photoshop"],
+      "@platform": ["./src/platform"],
+      "@ui": ["./src/ui"],
+      "@shared": ["./src/shared"]
+    }
   },
-  "include": ["src"]
+  "include": ["src", "tests"]
 }

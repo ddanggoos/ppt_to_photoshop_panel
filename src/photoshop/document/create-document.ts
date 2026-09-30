@@ -1,18 +1,15 @@
 import { app, constants } from "photoshop";
 import type { Document } from "photoshop/dom/Document";
 
-export interface SlideDocumentOptions {
+export interface CreateDocumentOptions {
   name: string;
   widthPx: number;
   heightPx: number;
   ppi: number;
 }
 
-/**
- * Creates an empty RGB document sized to a slide.
- * Must be called inside `core.executeAsModal`.
- */
-export async function createSlideDocument(options: SlideDocumentOptions): Promise<Document> {
+/** Creates an empty white RGB document. Must run inside `runModal`. */
+export async function createDocument(options: CreateDocumentOptions): Promise<Document> {
   const doc = await app.documents.add({
     name: options.name,
     width: options.widthPx,

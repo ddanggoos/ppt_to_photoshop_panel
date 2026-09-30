@@ -7,7 +7,8 @@ import path from "path";
 import { fileURLToPath } from "url";
 import CopyWebpackPlugin from "copy-webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
-import { aliases } from "@swc-uxp-wrappers/utils";
+import { aliases as swcAliases } from "@swc-uxp-wrappers/utils";
+import { pathAliases } from "./path-aliases.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -15,7 +16,7 @@ export default (env, argv) => {
   const isDev = argv.mode !== "production";
 
   return {
-    entry: { main: "./src/index.ts" },
+    entry: { main: "./src/main.ts" },
     // Same as the official SWC template; avoids webpack's eval-based dev default.
     devtool: isDev ? "cheap-module-source-map" : false,
     output: {
@@ -42,8 +43,12 @@ export default (env, argv) => {
     },
     resolve: {
       extensions: [".ts", ".js", ".json"],
-      // Redirect @spectrum-web-components/* to the UXP-compatible wrappers.
-      alias: aliases,
+      alias: {
+        // Redirect @spectrum-web-components/* to the UXP-compatible wrappers.
+        ...swcAliases,
+        // Module aliases (@core, @pptx, ...); see docs/ARCHITECTURE.md.
+        ...pathAliases,
+      },
     },
     // Modules provided by the host at runtime; never bundle them.
     externals: {
