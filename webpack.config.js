@@ -60,7 +60,8 @@ export default (env, argv) => {
     plugins: [
       new CopyWebpackPlugin({
         patterns: [
-          { from: "src/index.html", to: "." },
+          // Copy the markup as-is (like the official samples); skip webpack's HTML minification.
+          { from: "src/index.html", to: ".", info: { minimized: true } },
           { from: "manifest.json", to: "." },
         ],
       }),

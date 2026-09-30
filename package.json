@@ -17,6 +17,7 @@
   "dependencies": {
     "@spectrum-web-components/theme": "0.37.0",
     "@swc-uxp-wrappers/button": "2.0.0",
+    "@swc-uxp-wrappers/checkbox": "2.0.0",
     "@swc-uxp-wrappers/divider": "2.0.0",
     "@swc-uxp-wrappers/utils": "2.0.1",
     "fast-xml-parser": "^5.11.2",

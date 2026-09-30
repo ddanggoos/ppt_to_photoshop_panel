@@ -1,5 +1,7 @@
-import { POINTS_PER_INCH, ptToPx, textLines, type TextElement } from "@core";
+import { textLines, type TextElement } from "@core";
 import type { Document } from "photoshop/dom/Document";
+import type { Layer } from "photoshop/dom/Layer";
+import type { Placement } from "./placement";
 
 export interface TextLayerStyle {
   fontName: string;
@@ -15,12 +17,11 @@ export async function createTextLayer(
   doc: Document,
   element: TextElement,
   style: TextLayerStyle,
-  ppi: number,
-): Promise<void> {
-  const left = ptToPx(element.frame.x, ppi);
-  const top = ptToPx(element.frame.y, ppi);
-  // Photoshop takes the font size in pixels here; the document resolution equals `ppi`.
-  const fontSizePx = (style.sizePt / POINTS_PER_INCH) * ppi;
+  placement: Placement,
+): Promise<Layer> {
+  const left = placement.toX(element.frame.x);
+  const top = placement.toY(element.frame.y);
+  const fontSizePx = placement.fontSizePx(style.sizePt);
 
   const layer = await doc.createTextLayer({
     name: element.name,
@@ -36,4 +37,5 @@ export async function createTextLayer(
 
   const bounds = layer.bounds;
   await layer.translate(left - bounds.left, top - bounds.top);
+  return layer;
 }

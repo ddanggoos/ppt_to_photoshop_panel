@@ -31,3 +31,5 @@ npm test           # vitest (core, pptx)
 - TypeScript는 6.x를 씁니다. 7은 ts-loader가 쓰는 컴파일러 API를 제공하지 않습니다.
 - SWC 컴포넌트는 `@swc-uxp-wrappers/<name>/sp-<name>.js`로 import합니다(`src/ui/spectrum.ts`).
 - Photoshop과 UXP 타입 정의에 빠진 부분은 `src/types/`와 `src/photoshop/host/`에서 보강합니다.
+- webpack은 HTML을 기본으로 압축(속성 따옴표 제거)하기 때문에, `index.html`은 `info: { minimized: true }`로 원본 그대로 복사합니다.
+- UXP에서 `<title>`은 패널에 표시되므로 `index.html`에 넣지 않습니다.
