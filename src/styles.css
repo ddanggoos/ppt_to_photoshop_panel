@@ -1,0 +1,54 @@
+/* Host theme variables: https://developer.adobe.com/photoshop/uxp/2022/guides/theme-awareness/ */
+body {
+  margin: 0;
+  background-color: var(--uxp-host-background-color);
+  color: var(--uxp-host-text-color);
+  font-size: var(--uxp-host-font-size);
+}
+
+sp-theme {
+  display: block;
+  background-color: transparent;
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 12px;
+}
+
+.label {
+  color: var(--uxp-host-label-text-color);
+  font-size: var(--uxp-host-font-size-smaller);
+  margin-bottom: 4px;
+}
+
+.file-name {
+  font-weight: bold;
+  margin-bottom: 2px;
+}
+
+.secondary {
+  color: var(--uxp-host-text-color-secondary);
+  font-size: var(--uxp-host-font-size-smaller);
+}
+
+sp-divider {
+  margin-bottom: 12px;
+}
+
+.status {
+  margin-top: 8px;
+  font-size: var(--uxp-host-font-size-smaller);
+  color: var(--uxp-host-text-color-secondary);
+}
+
+.status.error {
+  color: #e34850;
+}

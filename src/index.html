@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>PPT to Photoshop</title>
+  <link rel="stylesheet" href="main.bundle.css">
+</head>
+<body>
+  <sp-theme theme="spectrum" color="dark" scale="medium">
+    <div class="panel">
+      <div class="section">
+        <span class="label">PowerPoint 파일</span>
+        <span id="file-name" class="file-name"></span>
+        <span id="slide-info" class="secondary"></span>
+      </div>
+
+      <div class="section">
+        <sp-button id="btn-open" variant="secondary">PPTX 열기</sp-button>
+      </div>
+
+      <sp-divider size="s"></sp-divider>
+
+      <div class="section">
+        <sp-button id="btn-convert" variant="accent" disabled>Photoshop으로 변환</sp-button>
+        <span id="status" class="status"></span>
+      </div>
+    </div>
+  </sp-theme>
+
+  <script src="main.bundle.js"></script>
+</body>
+</html>

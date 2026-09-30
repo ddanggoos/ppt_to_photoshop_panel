@@ -1,0 +1,76 @@
+# PPT to Photoshop
+
+PowerPoint(`.pptx`) 슬라이드를 Photoshop 문서로 변환하는 Photoshop **UXP 플러그인 패널**입니다.
+
+> 현재 상태: 기본 뼈대. PPTX를 열면 슬라이드 크기와 개수를 읽고, 슬라이드마다 같은 크기의 빈 Photoshop 문서를 만듭니다.
+> 텍스트, 이미지, 도형을 레이어로 옮기는 기능은 다음 단계에서 구현합니다.
+
+## 기술 스택
+
+Adobe 공식 문서와 공식 샘플([uxp-photoshop-plugin-samples](https://github.com/AdobeDocs/uxp-photoshop-plugin-samples))을 기준으로 구성했습니다.
+
+| 항목 | 선택 | 근거 |
+|---|---|---|
+| 호스트 | Photoshop 최신 버전 (`minVersion` 27.0.0) | 공식 Getting Started: 최신 Photoshop과 UXP Developer Tool 사용 |
+| Manifest | v5 + `enableSWCSupport` | [Manifest v5](https://developer.adobe.com/photoshop/uxp/2022/guides/uxp_guide/uxp-misc/manifest-v5/), [SWC in UXP](https://developer.adobe.com/photoshop/uxp/2022/uxp-api/reference-spectrum/swc/) |
+| UI | Spectrum Web Components (`@swc-uxp-wrappers/*`, SWC 0.37.0 고정) | UXP 8부터 SWC는 0.37.0으로 고정됨 |
+| 언어 | TypeScript 6 + `@types/photoshop` + `@adobe/cc-ext-uxp-types` | 공식 `typescript-webpack-sample` |
+| 번들러 | webpack 5 | 공식 SWC 템플릿(`create-swc-uxp-app`)과 샘플 |
+| PPTX 파싱 | JSZip + fast-xml-parser | 공식 `jszip-sample` |
+
+- UI 컴포넌트는 Photoshop 안에서 실행되므로 Adobe가 지정한 버전을 그대로 씁니다.
+- 빌드 도구(webpack, TypeScript 등)는 PC에서만 실행되므로 최신 안정판을 씁니다.
+- TypeScript 7은 ts-loader가 쓰는 컴파일러 API를 제공하지 않아서 6.0을 씁니다.
+
+## 준비물
+
+1. **Photoshop** 최신 버전 (Creative Cloud Desktop에서 설치)
+2. **UXP Developer Tool (UDT)** (Creative Cloud Desktop에서 설치)
+3. **Node.js 22 이상** (빌드 전용)
+
+## 빌드
+
+```bash
+npm install
+npm run build      # 프로덕션 빌드 → dist/
+npm run watch      # 개발용: 파일이 바뀔 때마다 자동으로 다시 빌드
+npm run typecheck  # 타입 검사
+```
+
+## Photoshop에 로드하기 (UDT)
+
+1. Photoshop을 실행하고, UDT의 **Connected apps**에 Photoshop이 표시되는지 확인합니다.
+2. UDT에서 **Add Plugin**을 누르고 이 레포 루트의 `manifest.json`을 선택합니다.
+3. 플러그인 행의 **••• → More → Advanced**에서 플러그인 폴더를 `dist`로 지정합니다.
+4. **••• → Load**를 누르면 Photoshop의 **플러그인** 메뉴에 `PPT to Photoshop` 패널이 나타납니다.
+5. (선택) `npm run watch`를 켜 두고 UDT에서 **••• → Watch**를 선택하면 수정 사항이 자동으로 다시 로드됩니다.
+   `manifest.json`을 바꿨다면 Unload 후 다시 Load 해야 합니다.
+
+디버깅은 **••• → Debug**를 누르면 열리는 DevTools에서 합니다(콘솔, 브레이크포인트).
+
+## 폴더 구조
+
+```
+├── manifest.json            플러그인 정보 (ID, 권한, 패널, 지원 PS 버전)
+├── webpack.config.js        빌드 설정 (SWC 별칭, 호스트 모듈 externals)
+├── tsconfig.json
+└── src/
+    ├── index.html           패널 마크업
+    ├── index.ts             진입점 (SWC 컴포넌트 등록, 패널 초기화)
+    ├── styles.css           Photoshop 테마 변수(--uxp-host-*) 기반 스타일
+    ├── ui/panel.ts          패널 동작 (파일 선택, 변환 버튼, 상태 표시)
+    ├── pptx/                PPTX 읽기
+    │   ├── reader.ts        ZIP 해제 → presentation.xml → 슬라이드 크기와 순서
+    │   ├── types.ts
+    │   └── units.ts         EMU ↔ px/pt 변환 (기본 144ppi: 16:9 → 1920×1080)
+    ├── photoshop/           Photoshop 문서 생성
+    │   ├── converter.ts     executeAsModal 안에서 슬라이드별 문서 생성
+    │   └── document.ts
+    └── types/               타입 정의 보강
+```
+
+## 참고 사항
+
+- `src/types/uxp-augment.d.ts`: `@adobe/cc-ext-uxp-types`에 `storage.localFileSystem` 선언이 빠져 있어서 보강했습니다.
+- `converter.ts`의 `reportProgress` 헬퍼: `@types/photoshop`에 `reportProgress`가 함수가 아닌 `void`로 잘못 선언되어 있어서 감쌌습니다.
+- 파일 접근 권한은 `localFileSystem: "request"`입니다. 사용자가 파일 선택창에서 고른 파일만 읽을 수 있습니다.

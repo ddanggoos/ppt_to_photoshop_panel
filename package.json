@@ -1,0 +1,34 @@
+{
+  "name": "ppt-to-photoshop-panel",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Photoshop UXP panel that converts PowerPoint (.pptx) slides into Photoshop documents",
+  "type": "module",
+  "scripts": {
+    "build": "webpack --mode production",
+    "watch": "webpack --watch --mode development",
+    "typecheck": "tsc --noEmit"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@swc-uxp-wrappers/button": "2.0.0",
+    "@swc-uxp-wrappers/divider": "2.0.0",
+    "@swc-uxp-wrappers/utils": "2.0.1",
+    "@spectrum-web-components/theme": "0.37.0",
+    "fast-xml-parser": "^5.11.2",
+    "jszip": "^3.10.2"
+  },
+  "devDependencies": {
+    "@adobe/cc-ext-uxp-types": "^7.3.1",
+    "@types/photoshop": "^27.11.0",
+    "copy-webpack-plugin": "^14.0.0",
+    "css-loader": "^7.1.5",
+    "mini-css-extract-plugin": "^2.10.2",
+    "ts-loader": "^9.6.2",
+    "typescript": "~6.0.3",
+    "webpack": "^5.111.1",
+    "webpack-cli": "^7.2.3"
+  }
+}
