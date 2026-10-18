@@ -14,8 +14,8 @@ export interface TextStyle {
 }
 
 export interface RenderOptions {
-  /** 1-based slide numbers whose text is added. */
-  slideNumbers: number[];
+  /** Text boxes to add: slide number → indices into `slide.elements`. Unlisted slides are skipped. */
+  selection: ReadonlyMap<number, readonly number[]>;
   textStyle: TextStyle;
   /** Name for the new document when no document is open, usually the .pptx file name. */
   documentName: string;

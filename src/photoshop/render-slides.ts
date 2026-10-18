@@ -11,11 +11,11 @@ import { createTextLayer, type TextLayerStyle } from "./layers/text-layer";
 import { DEFAULT_PPI, type RenderOptions } from "./render-options";
 
 /**
- * Adds the text of the chosen slides to the active document (or a new one),
+ * Adds the chosen text boxes to the active document (or a new one),
  * one group per slide, as a single undoable history step.
  */
 export async function renderSlides(presentation: Presentation, options: RenderOptions): Promise<void> {
-  const slides = presentation.slides.filter((slide) => options.slideNumbers.includes(slide.number));
+  const slides = selectedSlides(presentation, options.selection);
   const style: TextLayerStyle = {
     fontName: resolveFontName(options.textStyle.fontName, listFonts()),
     sizePt: options.textStyle.sizePt,
@@ -36,6 +36,15 @@ export async function renderSlides(presentation: Presentation, options: RenderOp
         await groupSlideLayers(doc, layers, slide.number);
       }
     });
+  });
+}
+
+/** Slides that have chosen text boxes, each narrowed to those boxes (stacking order kept). */
+function selectedSlides(presentation: Presentation, selection: RenderOptions["selection"]): Slide[] {
+  return presentation.slides.flatMap((slide) => {
+    const indices = selection.get(slide.number);
+    if (!indices || indices.length === 0) return [];
+    return [{ ...slide, elements: slide.elements.filter((_, index) => indices.includes(index)) }];
   });
 }
 
