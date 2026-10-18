@@ -15,6 +15,11 @@ export function getTypedElement<K extends keyof HTMLElementTagNameMap>(
   return el as HTMLElementTagNameMap[K];
 }
 
+/** Removes every child. `replaceChildren()` leaves the old children in place in UXP (Photoshop 27.11). */
+export function clearChildren(el: HTMLElement): void {
+  while (el.lastChild) el.removeChild(el.lastChild);
+}
+
 /**
  * Sets `disabled` through the property, skipping no-op changes. SWC (Lit) elements reflect it
  * to the attribute themselves; calling `setAttribute("disabled")` on `sp-checkbox` directly
