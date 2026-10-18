@@ -1,15 +1,28 @@
+import type { SlideElement } from "./element";
 import type { Slide } from "./slide";
 import { textLines } from "./elements/text";
 
-/**
- * Non-empty text lines of a slide in reading order:
- * text boxes sorted top to bottom, then left to right.
- */
+export interface IndexedElement {
+  element: SlideElement;
+  /** Position in `slide.elements` (stacking order). */
+  index: number;
+}
+
+/** Elements in reading order (top to bottom, then left to right), keeping their stacking index. */
+export function elementsInReadingOrder(slide: Slide): IndexedElement[] {
+  return slide.elements
+    .map((element, index) => ({ element, index }))
+    .sort((a, b) => a.element.frame.y - b.element.frame.y || a.element.frame.x - b.element.frame.x);
+}
+
+/** Non-empty lines of one element, in order. */
+export function visibleTextLines(element: SlideElement): string[] {
+  return textLines(element).filter((line) => line.trim() !== "");
+}
+
+/** Non-empty text lines of a slide in reading order. */
 export function slideTextLines(slide: Slide): string[] {
-  return [...slide.elements]
-    .sort((a, b) => a.frame.y - b.frame.y || a.frame.x - b.frame.x)
-    .flatMap(textLines)
-    .filter((line) => line.trim() !== "");
+  return elementsInReadingOrder(slide).flatMap(({ element }) => visibleTextLines(element));
 }
 
 export function hasText(slide: Slide): boolean {

@@ -15,8 +15,11 @@ export function getTypedElement<K extends keyof HTMLElementTagNameMap>(
   return el as HTMLElementTagNameMap[K];
 }
 
-/** Spectrum components read the `disabled` attribute, not the property. */
-export function setDisabled(el: HTMLElement, disabled: boolean): void {
-  if (disabled) el.setAttribute("disabled", "");
-  else el.removeAttribute("disabled");
+/**
+ * Sets `disabled` through the property, skipping no-op changes. SWC (Lit) elements reflect it
+ * to the attribute themselves; calling `setAttribute("disabled")` on `sp-checkbox` directly
+ * throws an AssertionError inside UXP (Photoshop 27.11, UXP 9.4).
+ */
+export function setDisabled(el: HTMLElement & { disabled?: boolean }, disabled: boolean): void {
+  if (Boolean(el.disabled) !== disabled) el.disabled = disabled;
 }

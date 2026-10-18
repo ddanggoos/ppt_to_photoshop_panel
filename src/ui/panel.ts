@@ -27,19 +27,30 @@ export function mountPanel(root: Document = document): void {
   const store = createPanelStore();
   const slideList = createSlideList(els.slideList, store);
 
+  // Wire the buttons first so a failure further down cannot leave them dead.
+  els.openButton.addEventListener("click", () => runAction(store, () => openPresentation(store)));
+  els.generateButton.addEventListener("click", () => runAction(store, () => generateTextLayers(store)));
+
+  const parts: Array<(state: PanelState) => void> = [
+    (state) => renderFileInfo(els, state),
+    (state) => renderSelectAll(els, state),
+    (state) => slideList.render(state),
+    (state) => renderTextStyleControls(els, state),
+    (state) => renderActionButtons(els, state),
+    (state) => renderStatusLine(els.status, state.status),
+  ];
+  // One failing component is logged instead of breaking the rest of the panel.
   const render = (state: PanelState) => {
-    renderFileInfo(els, state);
-    renderSelectAll(els, state);
-    slideList.render(state);
-    renderTextStyleControls(els, state);
-    renderActionButtons(els, state);
-    renderStatusLine(els.status, state.status);
+    for (const part of parts) {
+      try {
+        part(state);
+      } catch (error) {
+        console.error(error);
+      }
+    }
   };
   store.subscribe(render);
   mountSelectAll(els, store);
   mountTextStyleControls(els, store);
   render(store.get());
-
-  els.openButton.addEventListener("click", () => runAction(store, () => openPresentation(store)));
-  els.generateButton.addEventListener("click", () => runAction(store, () => generateTextLayers(store)));
 }
