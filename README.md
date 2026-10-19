@@ -60,10 +60,12 @@ PR과 `main` 푸시마다 GitHub Actions(`.github/workflows/ci.yml`)가 타입 �
 
 ## Photoshop에 로드하기 (UDT)
 
-1. Photoshop을 실행하고, UDT의 **Connected apps**에 Photoshop이 표시되는지 확인합니다.
-2. UDT에서 **Add Plugin**을 누르고 이 레포 루트의 `manifest.json`을 선택합니다.
-3. 플러그인 행의 **••• → More → Advanced**에서 플러그인 폴더를 `dist`로 지정합니다.
+1. Photoshop과 UDT 양쪽에서 개발자 모드를 켭니다(Photoshop은 **설정 → 플러그인 → 개발자 모드 활성화** 후 재시작).
+2. Photoshop을 실행하고, UDT의 **Connected apps**에 Photoshop이 표시되는지 확인합니다.
+3. `npm run build`로 `dist/`를 만든 뒤, UDT에서 **Add Plugin**을 누르고 **`dist/manifest.json`**을 선택합니다.
+   루트의 `manifest.json`을 선택하면 루트에 `index.html`이 없어서 로드가 실패합니다(Photoshop 로그: `Plugin rejected ... due to invalid object`).
 4. **••• → Load**를 누르면 Photoshop의 **플러그인** 메뉴에 `PPT to Photoshop` 패널이 나타납니다.
+   배포용 `.ccx`는 **••• → Package**로 만듭니다.
 5. (선택) `npm run watch`를 켜 두고 UDT에서 **••• → Watch**를 선택하면 수정 사항이 자동으로 다시 로드됩니다.
    `manifest.json`을 바꿨다면 Unload 후 다시 Load 해야 합니다.
 

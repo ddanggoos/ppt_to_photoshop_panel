@@ -71,12 +71,47 @@ sp-theme {
   border-bottom: 1px solid var(--uxp-host-border-color, #4a4a4a);
 }
 
-/* | checkbox | slide number | text preview | */
+/* Accordion item: header row, then the text box rows (shown when expanded). */
+.slide-item {
+  border-bottom: 1px solid var(--uxp-host-border-color, #4a4a4a);
+}
+
 .slide-row {
   display: flex;
+  flex-direction: row;
   align-items: flex-start;
   padding: 6px 0;
-  border-bottom: 1px solid var(--uxp-host-border-color, #4a4a4a);
+}
+
+/* | ▸ | checkbox | number | text | − |; the number and text toggle the checkbox */
+.slide-row,
+.text-box-row {
+  cursor: pointer;
+}
+
+.disclosure {
+  width: 16px;
+  flex-shrink: 0;
+  padding-top: 6px;
+  text-align: center;
+  color: var(--uxp-host-text-color-secondary, #a0a0a0);
+}
+
+.remove-button {
+  width: 20px;
+  flex-shrink: 0;
+  padding-top: 4px;
+  text-align: center;
+  font-size: 14px;
+  color: var(--uxp-host-text-color-secondary, #a0a0a0);
+}
+
+.remove-button:hover {
+  color: var(--uxp-host-text-color, #e0e0e0);
+}
+
+.remove-button.disabled {
+  opacity: 0.4;
 }
 
 .slide-number {
@@ -88,13 +123,30 @@ sp-theme {
   color: var(--uxp-host-text-color-secondary, #a0a0a0);
 }
 
-.slide-preview {
+.slide-children {
+  display: none;
+  padding: 0 0 6px 16px;
+}
+
+.slide-item.expanded .slide-children {
+  display: flex;
+  flex-direction: column;
+}
+
+/* | checkbox | text box text | */
+.text-box-row {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+}
+
+.text-preview {
   flex: 1;
   min-width: 0;
   padding-top: 6px;
 }
 
-.slide-preview.empty {
+.text-preview.empty {
   color: var(--uxp-host-text-color-secondary, #a0a0a0);
 }
 
@@ -104,12 +156,16 @@ sp-theme {
   text-overflow: ellipsis;
 }
 
+/* Two rows: | font | size pt |, then | status (truncated) | 생성 | */
 .panel-footer {
+  display: flex;
+  flex-direction: column;
   padding-top: 8px;
 }
 
 .text-style {
   display: flex;
+  flex-direction: row;
   align-items: center;
   margin-bottom: 8px;
 }
@@ -122,22 +178,31 @@ sp-theme {
 
 .text-style input {
   width: 56px;
+  flex-shrink: 0;
   margin-right: 4px;
 }
 
 .footer-actions {
   display: flex;
+  flex-direction: row;
   align-items: center;
-  justify-content: flex-end;
 }
 
 .status {
   flex: 1;
+  min-width: 0;
   margin-right: 8px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
   font-size: var(--uxp-host-font-size-smaller, 11px);
   color: var(--uxp-host-text-color-secondary, #a0a0a0);
 }
 
 .status.error {
   color: #e34850;
+}
+
+.footer-actions sp-button {
+  flex-shrink: 0;
 }

@@ -63,6 +63,7 @@ export default (env, argv) => {
           // Copy the markup as-is (like the official samples); skip webpack's HTML minification.
           { from: "src/index.html", to: ".", info: { minimized: true } },
           { from: "manifest.json", to: "." },
+          { from: "icons", to: "icons" },
         ],
       }),
       new MiniCssExtractPlugin({ filename: "[name].bundle.css" }),

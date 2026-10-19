@@ -8,5 +8,5 @@ export interface ActionButtonElements {
 
 export function renderActionButtons(els: ActionButtonElements, state: PanelState): void {
   setDisabled(els.openButton, state.busy);
-  setDisabled(els.generateButton, state.busy || state.selectedSlideNumbers.length === 0);
+  setDisabled(els.generateButton, state.busy || state.selection.size === 0);
 }
